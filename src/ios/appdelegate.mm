@@ -1,7 +1,7 @@
 #import "UIKit/UIKit.h"
 #include <QtCore>
 
-#import "Firebase/Firebase.h"
+//#import "Firebase/Firebase.h"
 
 @interface QIOSApplicationDelegate : UIResponder <UIApplicationDelegate>
 @end
