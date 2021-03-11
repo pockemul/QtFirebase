@@ -18,7 +18,7 @@ QtFirebaseAnalytics::QtFirebaseAnalytics(QObject* parent)
 {
     if(!self) {
         self = this;
-        qDebug() << self << "::QtFirebaseAnalytics" << "singleton";
+        qWarning() << self << "::QtFirebaseAnalytics" << "singleton";
     }
 
     if(qFirebase->ready())
@@ -32,7 +32,7 @@ QtFirebaseAnalytics::QtFirebaseAnalytics(QObject* parent)
 QtFirebaseAnalytics::~QtFirebaseAnalytics()
 {
     if(_ready) {
-        qDebug() << self << "::~QtFirebaseAnalytics" << "shutting down";
+        qWarning() << self << "::~QtFirebaseAnalytics" << "shutting down";
         analytics::Terminate();
         _ready = false;
         self = nullptr;
@@ -50,73 +50,73 @@ bool QtFirebaseAnalytics::checkInstance(const char *function)
 void QtFirebaseAnalytics::setUserProperty(const QString &propertyName, const QString &propertyValue)
 {
     if(!_ready) {
-        qDebug() << this << "::setUserProperty native part not ready";
+        qWarning() << this << "::setUserProperty native part not ready";
         return;
     }
 
-    qDebug() << this << "::setUserProperty" << propertyName << ":" << propertyValue;
+    qWarning() << this << "::setUserProperty" << propertyName << ":" << propertyValue;
     analytics::SetUserProperty(propertyName.toLatin1().constData(), propertyValue.toLatin1().constData());
 }
 
 void QtFirebaseAnalytics::setCurrentScreen(const QString &screenName, const QString &screenClass)
 {
     if(!_ready) {
-        qDebug() << this << "::setCurrentScreen native part not ready";
+        qWarning() << this << "::setCurrentScreen native part not ready";
         return;
     }
 
-    qDebug() << this << "::setCurrentScreen" << screenName << ":" << screenClass ;
+    qWarning() << this << "::setCurrentScreen" << screenName << ":" << screenClass ;
     analytics::SetCurrentScreen(screenName.toLatin1().constData(), screenClass.toLatin1().constData());
 }
 
 void QtFirebaseAnalytics::logEvent(const QString &name)
 {
     if(!_ready) {
-        qDebug() << this << "::logEvent native part not ready";
+        qWarning() << this << "::logEvent native part not ready";
         return;
     }
 
-    qDebug() << this << "::logEvent" << name << "logging (no parameters)";
+    qWarning() << this << "::logEvent" << name << "logging (no parameters)";
     analytics::LogEvent(name.toUtf8().constData());
 }
 
 void QtFirebaseAnalytics::logEvent(const QString &name, const QString &parameterName, const QString &parameterValue)
 {
     if(!_ready) {
-        qDebug() << this << "::logEvent native part not ready";
+        qWarning() << this << "::logEvent native part not ready";
         return;
     }
 
-    qDebug() << this << "::logEvent" << name << "logging string parameter" << parameterName << ":" << parameterValue;
+    qWarning() << this << "::logEvent" << name << "logging string parameter" << parameterName << ":" << parameterValue;
     analytics::LogEvent(name.toUtf8().constData(), parameterName.toUtf8().constData(),parameterValue.toUtf8().constData());
 }
 
 void QtFirebaseAnalytics::logEvent(const QString &name, const QString &parameterName, const double parameterValue)
 {
     if(!_ready) {
-        qDebug() << this << "::logEvent native part not ready";
+        qWarning() << this << "::logEvent native part not ready";
         return;
     }
 
-    qDebug() << this << "::logEvent" << name << "logging double parameter" << parameterName << ":" << parameterValue;
+    qWarning() << this << "::logEvent" << name << "logging double parameter" << parameterName << ":" << parameterValue;
     analytics::LogEvent(name.toUtf8().constData(), parameterName.toUtf8().constData(),parameterValue);
 }
 
 void QtFirebaseAnalytics::logEvent(const QString &name, const QString &parameterName, const int parameterValue)
 {
     if(!_ready) {
-        qDebug() << this << "::logEvent native part not ready";
+        qWarning() << this << "::logEvent native part not ready";
         return;
     }
 
-    qDebug() << this << "::logEvent" << name << "logging int parameter" << parameterName << ":" << parameterValue;
+    qWarning() << this << "::logEvent" << name << "logging int parameter" << parameterName << ":" << parameterValue;
     analytics::LogEvent(name.toUtf8().constData(), parameterName.toUtf8().constData(),parameterValue);
 }
 
 void QtFirebaseAnalytics::logEvent(const QString &name, const QVariantMap &bundle)
 {
     if(!_ready) {
-        qDebug() << this << "::logEvent native part not ready";
+        qWarning() << this << "::logEvent native part not ready";
         return;
     }
 
@@ -136,14 +136,14 @@ void QtFirebaseAnalytics::logEvent(const QString &name, const QVariantMap &bundl
 
         if(variant.type() == QVariant::Type(QMetaType::Int)) {
             parameters[index] = analytics::Parameter(keys.at(index).constData(), variant.toInt());
-            qDebug() << this << "::logEvent" << "bundle parameter" << eventKey << ":" << variant.toInt();
+            qWarning() << this << "::logEvent" << "bundle parameter" << eventKey << ":" << variant.toInt();
         } else if(variant.type() == QVariant::Type(QMetaType::Double)) {
             parameters[index] = analytics::Parameter(keys.at(index).constData(),variant.toDouble());
-            qDebug() << this << "::logEvent" << "bundle parameter" << eventKey << ":" << variant.toDouble();
+            qWarning() << this << "::logEvent" << "bundle parameter" << eventKey << ":" << variant.toDouble();
         } else if(variant.type() == QVariant::Type(QMetaType::QString)) {
             strings.append(variant.toString().toUtf8());
             parameters[index] = analytics::Parameter(keys.at(index).constData(), strings.at(strings.size()-1).constData());
-            qDebug() << this << "::logEvent" << "bundle parameter" << eventKey << ":" << strings.at(strings.size()-1);
+            qWarning() << this << "::logEvent" << "bundle parameter" << eventKey << ":" << strings.at(strings.size()-1);
         } else {
             qWarning() << this << "::logEvent" << "bundle parameter" << eventKey << "has unsupported data type. Sending empty strings";
             parameters[index] = analytics::Parameter("", "");
@@ -152,7 +152,7 @@ void QtFirebaseAnalytics::logEvent(const QString &name, const QVariantMap &bundl
         index++;
     }
 
-    qDebug() << this << "::logEvent" << "logging" << "bundle" << name;
+    qWarning() << this << "::logEvent" << "logging" << "bundle" << name;
     analytics::LogEvent(name.toUtf8().constData(), parameters, static_cast<size_t>(bundle.size()));
     delete[] parameters;
     parameters = nullptr;
@@ -166,7 +166,7 @@ QVariantList QtFirebaseAnalytics::userProperties() const
 void QtFirebaseAnalytics::setUserProperties(const QVariantList &userProperties)
 {
     if(!_ready) {
-        qDebug() << this << "::setUserProperties native part not ready";
+        qWarning() << this << "::setUserProperties native part not ready";
         return;
     }
 
@@ -209,7 +209,7 @@ QString QtFirebaseAnalytics::userId() const
 void QtFirebaseAnalytics::setUserId(const QString &userId)
 {
     if(!_ready) {
-        qDebug() << this << "::setUserId native part not ready";
+        qWarning() << this << "::setUserId native part not ready";
         return;
     }
 
@@ -224,7 +224,7 @@ void QtFirebaseAnalytics::setUserId(const QString &userId)
     if(_userId != aUserId) {
         _userId = aUserId;
         analytics::SetUserId(_userId.toLatin1().constData());
-        qDebug() << this << "::setUserId sat to" << _userId;
+        qWarning() << this << "::setUserId sat to" << _userId;
         emit userIdChanged();
     }
 }
@@ -232,7 +232,7 @@ void QtFirebaseAnalytics::setUserId(const QString &userId)
 void QtFirebaseAnalytics::unsetUserId()
 {
     if(!_ready) {
-        qDebug() << this << "::unsetUserId native part not ready";
+        qWarning() << this << "::unsetUserId native part not ready";
         return;
     }
 
@@ -269,7 +269,7 @@ void QtFirebaseAnalytics::setReady(bool ready)
 {
     if (_ready != ready) {
         _ready = ready;
-        qDebug() << self << "::setReady" << ready;
+        qWarning() << self << "::setReady" << ready;
         emit readyChanged();
     }
 }
@@ -282,14 +282,14 @@ bool QtFirebaseAnalytics::enabled()
 void QtFirebaseAnalytics::setEnabled(bool enabled)
 {
     if(!_ready) {
-        qDebug() << this << "::setEnabled native part not ready";
+        qWarning() << this << "::setEnabled native part not ready";
         return;
     }
 
     if (_enabled != enabled) {
         analytics::SetAnalyticsCollectionEnabled(enabled);
         _enabled = enabled;
-        qDebug() << self << "::setEnabled" << enabled;
+        qWarning() << self << "::setEnabled" << enabled;
         emit enabledChanged();
     }
 }
@@ -304,21 +304,23 @@ void QtFirebaseAnalytics::setMinimumSessionDuration(unsigned int minimumSessionD
     qWarning() << this << "::setMinimumSessionDuration is deprecated and no longer functional!";
 
     if(!_ready) {
-        qDebug() << this << "::setMinimumSessionDuration native part not ready";
+        qWarning() << this << "::setMinimumSessionDuration native part not ready";
         return;
     }
 
     if (_minimumSessionDuration != minimumSessionDuration) {
         _minimumSessionDuration = minimumSessionDuration;
-        qDebug() << self << "::setMinimumSessionDuration" << minimumSessionDuration;
+        qWarning() << self << "::setMinimumSessionDuration" << minimumSessionDuration;
         emit minimumSessionDurationChanged();
     }
 }
 
 void QtFirebaseAnalytics::init()
 {
+    qWarning()<<"QtFirebaseAnalytics::init";
+
     if(!qFirebase->ready()) {
-        qDebug() << self << "::init" << "base not ready";
+        qWarning() << self << "::init" << "base not ready";
         return;
     }
 
@@ -326,11 +328,12 @@ void QtFirebaseAnalytics::init()
         _initializing = true;
 
         analytics::Initialize(*qFirebase->firebaseApp());
-        qDebug() << self << "::init" << "native initialized";
+        qWarning() << self << "::init" << "native initialized";
         _initializing = false;
         setReady(true);
 
         // Set current session duration timeout if it was set up already
         analytics::SetSessionTimeoutDuration(_sessionTimeout);
+
     }
 }

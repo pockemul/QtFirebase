@@ -1,7 +1,9 @@
 #import "UIKit/UIKit.h"
+#import "UserNotifications/UserNotifications.h"
 #include <QtCore>
 
 #import "Firebase/Firebase.h"
+
 
 @interface QIOSApplicationDelegate : UIResponder <UIApplicationDelegate>
 @end
@@ -17,7 +19,17 @@
     Q_UNUSED(application);
     Q_UNUSED(launchOptions);
     // Use Firebase library to configure APIs
-    //[FIRApp configure];
+//    [FIRApp configure];
+
+    qWarning()<<"test";
+    UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
+    [center requestAuthorizationWithOptions:UNAuthorizationOptionBadge
+                                            completionHandler:^(BOOL granted, NSError *error){
+        if(granted == YES) {
+            [[UIApplication sharedApplication] setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
+        };
+    }];
+    [application registerForRemoteNotifications];
 
     return YES;
 }

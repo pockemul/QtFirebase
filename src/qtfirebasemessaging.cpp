@@ -66,6 +66,8 @@ bool QtFirebaseMessaging::checkInstance(const char *function)
 
 void QtFirebaseMessaging::init()
 {
+    qWarning()<<"QtFirebaseMessaging::init";
+
     if(!qFirebase->ready()) {
         qDebug() << self << "::init" << "base not ready";
         return;
@@ -243,6 +245,7 @@ void MessageListener::OnMessage(const messaging::Message &message)
 
 void MessageListener::OnTokenReceived(const char *token)
 {
+    qWarning()<<"MessageListener::OnTokenReceived"<<QString::fromUtf8(token);
     setToken(QString::fromUtf8(token));
 }
 
@@ -274,6 +277,8 @@ QVariantMap MessageListener::data()
 
 void MessageListener::setData(const QVariantMap &data)
 {
+    qWarning()<<"MessageListener::setData"<<data;
+
     if (_data != data) {
         _notifyMessageReceived = true;
         _data = data;
